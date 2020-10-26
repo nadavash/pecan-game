@@ -5,7 +5,7 @@ using UnityEngine;
 public class BallController : MonoBehaviour {
     public float MovementSpeed = 0.1f;
 
-    void Update() {
+    void FixedUpdate() {
         if (Input.GetKey(KeyCode.UpArrow)) {
             transform.position += new Vector3(0, MovementSpeed, 0);
         } else if (Input.GetKey(KeyCode.DownArrow)) {
@@ -17,5 +17,9 @@ public class BallController : MonoBehaviour {
         } else if (Input.GetKey(KeyCode.LeftArrow)) {
             transform.position += new Vector3(-MovementSpeed, 0, 0);
         }
+    }
+
+    public void MoveBallUp() {
+        transform.position += Vector3.up * MovementSpeed;
     }
 }

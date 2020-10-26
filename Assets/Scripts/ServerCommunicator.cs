@@ -1,16 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ServerCommunicator : MonoBehaviour {
+
     [SerializeField]
     private string serverUrl = "ws://localhost:8080/ws/game";
+    public UnityEvent onKeyHeld;
 
     private WsClient client;
+
+    private class ControllerState {
+        public bool UpKey = false;
+    }
+
+    private ControllerState controllerState;
 
     // Start is called before the first frame update
     private void Awake() {
         client = new WsClient(serverUrl);
+        controllerState = new ControllerState();
         ConnectToServer();
     }
 
@@ -24,10 +34,21 @@ public class ServerCommunicator : MonoBehaviour {
         }
     }
 
+    void FixedUpdate() {
+        if (controllerState.UpKey) {
+            onKeyHeld.Invoke();
+        }
+    }
+
     private void HandleMessage(string msg) {
         Debug.Log("Server: " + msg);
-        if (msg == "up") {
-            transform.position += Vector3.up * 0.1f;
+        switch (msg) {
+            case "upKeyUp":
+            controllerState.UpKey = false;
+            break;
+            case "upKeyDown":
+            controllerState.UpKey = true;
+            break;
         }
     }
 
